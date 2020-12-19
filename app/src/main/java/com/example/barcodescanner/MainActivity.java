@@ -40,14 +40,13 @@ public class MainActivity extends AppCompatActivity {
     private SurfaceView surfaceView;
 
 
-    class fetchGoogleBooks extends AsyncTask<String, Void, SBook> {
+    class fetchGoogleBooks extends AsyncTask<String, Void, Book> {
         @Override
-        protected SBook doInBackground(String... params) {
+        protected Book doInBackground(String... params) {
             final String ISBN = params[0];
             try {
                 QueryGoogleBooks q = new QueryGoogleBooks();
-                q.getBookByISBN(ISBN);
-                return q.BOOK;
+                return q.getBookByISBN(ISBN);
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
@@ -55,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(SBook book) {
+        protected void onPostExecute(Book book) {
             if (book == null) {
                 bookText.setText("Query Failed");
             } else {

@@ -6,7 +6,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class HTTPClient {
-    private static final String APIURL = "https://www.googleapis.com/";
+    private static final String APIURL = "https://www.googleapis.com";
 
     private static Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(APIURL)

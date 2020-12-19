@@ -1,12 +1,9 @@
 package com.example.barcodescanner;
 
-import java.util.List;
+public class Result {
+    Book volumeInfo;
 
-public class Result{
-    int totalItems;
-    List<Book> items;
-
-    public List<Book> getItems(){
-        return items;
+    public Book getBook(){
+        return volumeInfo;
     }
 }
