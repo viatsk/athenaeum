@@ -22,14 +22,13 @@ public class QueryGoogleBooks {
     //public static SBook BOOK;
 
     public Book getBookByISBN(String ISBN) throws Exception {
-        final Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("q", "isbn:"+ISBN);
-        final Results googleResponse = googleBooksAPI.findBookByISBN(queryParams);
+        // final Map<String, Object> queryParams = new HashMap<>();
+        // queryParams.put("q", "isbn:"+ISBN);
+        final Results googleResponse = googleBooksAPI.findBookByISBN(ISBN);
         if (googleResponse == null) {
             System.out.println("GOOGLE BOOKS NO ENTRY");
             throw new Exception("Google Books - no entry for " + ISBN);
         }
-
         final List<Result> results = googleResponse.getItems();
         if (results == null || results.size() < 1) {
             System.out.println("google books response! ");
