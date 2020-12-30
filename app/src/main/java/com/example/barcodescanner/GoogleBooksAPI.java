@@ -9,5 +9,5 @@ import retrofit2.http.QueryMap;
 
 public interface GoogleBooksAPI {
     @GET("/books/v1/volumes/")
-    Results findBookByISBN(@Query("q") String ISBN);
+    Call<Results> findBookByISBN(@Query("q") String ISBN);
 }

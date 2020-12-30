@@ -1,23 +1,20 @@
 package com.example.barcodescanner;
 
-import java.util.List;
+import com.google.gson.annotations.SerializedName;
 
-public class Book {
-    private String title;
-    private List<String> authors;
+import java.io.Serializable;
 
-    public String getTitle() {
-        return title;
+/*
+ * Represents a single result from the google books API
+ */
+
+public class Book implements Serializable {
+    @SerializedName("id")
+    private String id;
+    @SerializedName("volumeInfo")
+    private VolumeInfo volumeInfo;
+
+    public VolumeInfo getVolumeInfo(){
+        return volumeInfo;
     }
-
-    public List<String> getAuthors() {
-        return authors;
-    }
-
-    //public String toString(){
-    //    StringBuilder builder = new StringBuilder();
-    //    builder.append("Title: " + title + "\n");
-    //    builder.append("Author: " + authors.toString() + "\n");
-    //    return new String(builder);
-    //}
 }

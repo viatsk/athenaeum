@@ -3,11 +3,10 @@ package com.example.barcodescanner;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.loader.content.AsyncTaskLoader;
 
 
 import android.Manifest;
-import android.content.AsyncQueryHandler;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -21,15 +20,13 @@ import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
-public class MainActivity extends AppCompatActivity {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class MainActivity extends AppCompatActivity implements ViewContract.View {
     private BarcodeDetector barcodeDetector;
 
     private CameraSource cameraSource;
@@ -38,29 +35,33 @@ public class MainActivity extends AppCompatActivity {
     private TextView barcodeText;
     private TextView bookText;
     private SurfaceView surfaceView;
+    private ViewContract.Presenter presenter;
 
 
-    class fetchGoogleBooks extends AsyncTask<String, Void, Book> {
-        @Override
-        protected Book doInBackground(String... params) {
-            final String ISBN = params[0];
-            try {
-                QueryGoogleBooks q = new QueryGoogleBooks();
-                return q.getBookByISBN(ISBN);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        presenter = new QueryGoogleBooks(this);
+        surfaceView = findViewById(R.id.surface_view); // Bind surface view
+        barcodeText = findViewById(R.id.barcode_text); // Bind barcode text
+        bookText = findViewById(R.id.bookinfo_text); // Bind book text
+        initCamera();
+    }
+
+    @Override
+    public void handleSuccess(Results results) {
+        //  Results will contain all the books, we want only the first one
+        if (results.getItems().size() != 0) {
+            bookText.setText(results.getFirstItem().getVolumeInfo().toString());
+        } else {
+            handleFailure("Error - results size was 0!");
         }
+    }
 
-        @Override
-        protected void onPostExecute(Book book) {
-            if (book == null) {
-                bookText.setText("Query Failed");
-            } else {
-                bookText.setText(book.toString());
-            }
-        }
+    @Override
+    public void handleFailure(String message) {
+        bookText.setText(message);
     }
 
     protected void initCamera() {
@@ -102,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void receiveDetections(@NonNull Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> bcs = detections.getDetectedItems();
-                final fetchGoogleBooks fetcher = new fetchGoogleBooks();
+                //final fetchGoogleBooks fetcher = new fetchGoogleBooks();
                 if (bcs.size() != 0) {
                     Barcode bc = bcs.valueAt(0);
                     String bcVal = bc.rawValue;
@@ -130,7 +131,8 @@ public class MainActivity extends AppCompatActivity {
                                 //bookText.setText(queryGoogleAPI(bcVal));
                             }
                             else {
-                                fetcher.execute(bcVal);
+                                presenter.search(bcVal);
+                                //fetcher.execute(bcVal);
                             }
                         }
                     });
@@ -140,15 +142,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        surfaceView = findViewById(R.id.surface_view); // Bind surface view
-        barcodeText = findViewById(R.id.barcode_text); // Bind barcode text
-        bookText = findViewById(R.id.bookinfo_text); // Bind book text
-        initCamera();
-    }
 
 
 }
