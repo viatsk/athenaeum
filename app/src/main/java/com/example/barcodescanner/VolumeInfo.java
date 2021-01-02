@@ -12,6 +12,8 @@ public class VolumeInfo implements Serializable{
     private String subtitle;
     @SerializedName("authors")
     private List<String> authors;
+    @SerializedName("imageLinks")
+    private ImageLinks imageLinks;
 
     public String getTitle() {
         return title;
@@ -20,6 +22,7 @@ public class VolumeInfo implements Serializable{
     public List<String> getAuthors() {
         return authors;
     }
+    public ImageLinks getImageLinks() {return imageLinks; }
 
     @Override
     public String toString(){
@@ -28,6 +31,7 @@ public class VolumeInfo implements Serializable{
         for (String author : authors) {
             builder.append("Author: " + author.toString() + "\n");
         }
+        builder.append("This is a test sting I am adding!");
         return new String(builder);
     }
 }

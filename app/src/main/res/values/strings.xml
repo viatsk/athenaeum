@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">BarcodeScanner</string>
+    <string name="book_image">An image of your book</string>
+    <string name="barcode">Barcode Detected</string>
+    <string name="bookinfo">Information Pulled</string>
 </resources>

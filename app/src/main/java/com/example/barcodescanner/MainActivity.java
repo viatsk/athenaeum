@@ -6,13 +6,12 @@ import androidx.core.app.ActivityCompat;
 
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.vision.CameraSource;
@@ -22,9 +21,7 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity implements ViewContract.View {
     private BarcodeDetector barcodeDetector;
@@ -35,6 +32,8 @@ public class MainActivity extends AppCompatActivity implements ViewContract.View
     private TextView barcodeText;
     private TextView bookText;
     private SurfaceView surfaceView;
+    private ImageView bookImage;
+
     private ViewContract.Presenter presenter;
 
 
@@ -46,14 +45,23 @@ public class MainActivity extends AppCompatActivity implements ViewContract.View
         surfaceView = findViewById(R.id.surface_view); // Bind surface view
         barcodeText = findViewById(R.id.barcode_text); // Bind barcode text
         bookText = findViewById(R.id.bookinfo_text); // Bind book text
+        bookImage = findViewById(R.id.book_image); // Bind image view
+        Picasso.with(this).load("https://books.google.com/books/content?id=bLeHDwAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api")
+            .into(bookImage);
         initCamera();
     }
 
     @Override
     public void handleSuccess(Results results) {
         //  Results will contain all the books, we want only the first one
-        if (results.getItems().size() != 0) {
+        if (results.getItems() != null && results.getItems().size() != 0 ) {
             bookText.setText(results.getFirstItem().getVolumeInfo().toString());
+            //bookText.setText(results.getFirstItem().getVolumeInfo().getImageLinks().getThumbnail());
+            Picasso.with(getBaseContext())
+                    //.setLoggingEnabled(true)
+                    .load(results.getFirstItem().getVolumeInfo().getImageLinks().getThumbnail())
+                    .fit().centerInside()
+                    .into(bookImage);
         } else {
             handleFailure("Error - results size was 0!");
         }
@@ -65,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements ViewContract.View
     }
 
     protected void initCamera() {
-        BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(this).setBarcodeFormats(Barcode.ALL_FORMATS).build();
+        barcodeDetector = new BarcodeDetector.Builder(this).setBarcodeFormats(Barcode.ALL_FORMATS).build();
         cameraSource = new CameraSource.Builder(this, barcodeDetector).setAutoFocusEnabled(true).build();
 
         surfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
@@ -103,7 +111,6 @@ public class MainActivity extends AppCompatActivity implements ViewContract.View
             @Override
             public void receiveDetections(@NonNull Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> bcs = detections.getDetectedItems();
-                //final fetchGoogleBooks fetcher = new fetchGoogleBooks();
                 if (bcs.size() != 0) {
                     Barcode bc = bcs.valueAt(0);
                     String bcVal = bc.rawValue;
