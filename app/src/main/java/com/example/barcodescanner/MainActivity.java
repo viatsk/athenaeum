@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements ViewContract.View
     private ImageView bookImage;
 
     private ViewContract.Presenter presenter;
+    private Button saveButton;
 
 
     @Override
@@ -46,8 +48,9 @@ public class MainActivity extends AppCompatActivity implements ViewContract.View
         barcodeText = findViewById(R.id.barcode_text); // Bind barcode text
         bookText = findViewById(R.id.bookinfo_text); // Bind book text
         bookImage = findViewById(R.id.book_image); // Bind image view
-        Picasso.with(this).load("https://books.google.com/books/content?id=bLeHDwAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api")
-            .into(bookImage);
+        //Picasso.with(this).load("https://books.google.com/books/content?id=bLeHDwAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api")
+        //    .into(bookImage);
+        saveButton = findViewById(R.id.saveButton);
         initCamera();
     }
 
@@ -57,9 +60,9 @@ public class MainActivity extends AppCompatActivity implements ViewContract.View
         if (results.getItems() != null && results.getItems().size() != 0 ) {
             bookText.setText(results.getFirstItem().getVolumeInfo().toString());
             //bookText.setText(results.getFirstItem().getVolumeInfo().getImageLinks().getThumbnail());
-            Picasso.with(getBaseContext())
+            Picasso.with(this)
                     //.setLoggingEnabled(true)
-                    .load(results.getFirstItem().getVolumeInfo().getImageLinks().getThumbnail())
+                    .load(results.getFirstItem().getVolumeInfo().getImageLinks().getThumbnail().replace("http:", "https:"))
                     .fit().centerInside()
                     .into(bookImage);
         } else {
@@ -71,6 +74,8 @@ public class MainActivity extends AppCompatActivity implements ViewContract.View
     public void handleFailure(String message) {
         bookText.setText(message);
     }
+
+
 
     protected void initCamera() {
         barcodeDetector = new BarcodeDetector.Builder(this).setBarcodeFormats(Barcode.ALL_FORMATS).build();

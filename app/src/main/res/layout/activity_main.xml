@@ -27,7 +27,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-
             <TextView
                 android:id="@+id/barcode_text"
                 android:layout_width="match_parent"
@@ -42,15 +41,22 @@
                 android:layout_height="wrap_content"
                 android:text="@string/bookinfo"
                 android:textSize="14sp"/>
-
             <ImageView
                 android:id="@+id/book_image"
                 android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_gravity="center"
-                android:contentDescription="@string/book_image" />
+                android:contentDescription="@string/book_image"
+                android:src="@drawable/ic_launcher_foreground"
+                />
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:id="@+id/saveButton"
+                android:text="Save Book" />
         </LinearLayout>
     </ScrollView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
