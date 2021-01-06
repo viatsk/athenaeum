@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">BarcodeScanner</string>
     <string name="book_image">An image of your book</string>
-    <string name="barcode">Barcode Detected</string>
-    <string name="bookinfo">Information Pulled</string>
+    <string name="barcode">Barcode</string>
+    <string name="bookinfo">Title, Author, etc will appear here </string>
+    <string name="left_arrow">&lt;</string>
+    <string name="right_arrow">&gt;</string>
+    <string name="have">Have</string>
+    <string name="want">Want</string>
 </resources>

@@ -12,6 +12,10 @@ public class VolumeInfo implements Serializable{
     private String subtitle;
     @SerializedName("authors")
     private List<String> authors;
+    @SerializedName("publisher")
+    private String publisher;
+    @SerializedName("publishedDate")
+    private String publishedDate;
     @SerializedName("imageLinks")
     private ImageLinks imageLinks;
 
@@ -27,11 +31,11 @@ public class VolumeInfo implements Serializable{
     @Override
     public String toString(){
         StringBuilder builder = new StringBuilder();
-        builder.append("Title: " + title + "\n");
+        builder.append("Title: " + title + " - " + subtitle + "\n");
         for (String author : authors) {
             builder.append("Author: " + author.toString() + "\n");
         }
-        builder.append("This is a test sting I am adding!");
+        builder.append("Published By " + publisher + " on " + publishedDate + "\n");
         return new String(builder);
     }
 }

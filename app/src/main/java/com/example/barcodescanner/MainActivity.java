@@ -36,8 +36,10 @@ public class MainActivity extends AppCompatActivity implements ViewContract.View
     private ImageView bookImage;
 
     private ViewContract.Presenter presenter;
-    private Button saveButton;
+    private Button haveButton;
+    private Button wantButton;
 
+    public int resCounter = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,21 +50,33 @@ public class MainActivity extends AppCompatActivity implements ViewContract.View
         barcodeText = findViewById(R.id.barcode_text); // Bind barcode text
         bookText = findViewById(R.id.bookinfo_text); // Bind book text
         bookImage = findViewById(R.id.book_image); // Bind image view
-        //Picasso.with(this).load("https://books.google.com/books/content?id=bLeHDwAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api")
-        //    .into(bookImage);
-        saveButton = findViewById(R.id.saveButton);
+        haveButton = findViewById(R.id.have_button);
+        wantButton = findViewById(R.id.want_button);
         initCamera();
     }
 
+    /*
+    @Override
+    public void onBackPressed() {
+        if (cameraSource == null) {
+            try {
+                if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                    cameraSource.start(surfaceView.getHolder());
+                }
+            } catch (Exception E) {
+                handleFailure("Restarting Camera!");
+            }
+        }
+    }
+     */
+
     @Override
     public void handleSuccess(Results results) {
-        //  Results will contain all the books, we want only the first one
-        if (results.getItems() != null && results.getItems().size() != 0 ) {
-            bookText.setText(results.getFirstItem().getVolumeInfo().toString());
-            //bookText.setText(results.getFirstItem().getVolumeInfo().getImageLinks().getThumbnail());
+        if (results.getItems() != null) {
+            bookText.setText(results.getItemByIndex(resCounter).getVolumeInfo().toString());
             Picasso.with(this)
                     //.setLoggingEnabled(true)
-                    .load(results.getFirstItem().getVolumeInfo().getImageLinks().getThumbnail().replace("http:", "https:"))
+                    .load(results.getItemByIndex(resCounter).getVolumeInfo().getImageLinks().getThumbnail().replace("http:", "https:"))
                     .fit().centerInside()
                     .into(bookImage);
         } else {
@@ -79,13 +93,15 @@ public class MainActivity extends AppCompatActivity implements ViewContract.View
 
     protected void initCamera() {
         barcodeDetector = new BarcodeDetector.Builder(this).setBarcodeFormats(Barcode.ALL_FORMATS).build();
-        cameraSource = new CameraSource.Builder(this, barcodeDetector).setAutoFocusEnabled(true).build();
+        cameraSource = new CameraSource.Builder(this, barcodeDetector)
+                .setAutoFocusEnabled(true)
+                .build();
 
         surfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(@NonNull SurfaceHolder holder) {
                 try {
-                    if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                    if(ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED){
                         cameraSource.start(surfaceView.getHolder());
                     } else {
                         ActivityCompat.requestPermissions(MainActivity.this, new
@@ -119,12 +135,9 @@ public class MainActivity extends AppCompatActivity implements ViewContract.View
                 if (bcs.size() != 0) {
                     Barcode bc = bcs.valueAt(0);
                     String bcVal = bc.rawValue;
-                    barcodeText.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            barcodeText.setText(bcVal);
-                        }
-                    });
+                    barcodeText.setText(bcVal);
+                    presenter.search(bcVal);
+                    /*
                     bookText.post(new Runnable() {
                         private boolean validateISBN(String ISBN) {
                             int sum = 0;
@@ -144,10 +157,10 @@ public class MainActivity extends AppCompatActivity implements ViewContract.View
                             }
                             else {
                                 presenter.search(bcVal);
-                                //fetcher.execute(bcVal);
                             }
                         }
                     });
+                     */
                 };
             }
         });

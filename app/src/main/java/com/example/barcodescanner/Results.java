@@ -25,5 +25,6 @@ public class Results implements Serializable {
     public Book getFirstItem() {
         return items.get(0);
     }
+    public Book getItemByIndex(int i) { return items.get(i); } //TODO: Write a check for this!}
 
 }
