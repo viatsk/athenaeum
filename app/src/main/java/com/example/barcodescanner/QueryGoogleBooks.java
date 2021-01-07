@@ -1,18 +1,6 @@
 package com.example.barcodescanner;
 
-import android.os.AsyncTask;
-
 import androidx.annotation.NonNull;
-
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
