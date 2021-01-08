@@ -13,8 +13,8 @@ public class Book implements Serializable {
     private String id;
     @SerializedName("volumeInfo")
     private VolumeInfo volumeInfo;
-
     public VolumeInfo getVolumeInfo(){
         return volumeInfo;
     }
+
 }

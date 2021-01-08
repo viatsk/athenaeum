@@ -18,6 +18,12 @@ public class VolumeInfo implements Serializable{
     private String publishedDate;
     @SerializedName("imageLinks")
     private ImageLinks imageLinks;
+    @SerializedName("description")
+    private String description;
+    @SerializedName("industryIdentifiers")
+    private List<IndustryIdentifier> industryIdentifiers;
+    @SerializedName("printType")
+    private String printType;
 
     public String getTitle() {
         return title;
@@ -27,12 +33,13 @@ public class VolumeInfo implements Serializable{
         return authors;
     }
     public ImageLinks getImageLinks() {return imageLinks; }
+    public String getPrintType() { return printType; }
 
     @Override
     public String toString(){
         StringBuilder builder = new StringBuilder();
         builder.append("Title: " + title + " - " + subtitle + "\n");
-        for (String author : authors) {
+        for (String author : getAuthors()) {
             builder.append("Author: " + author.toString() + "\n");
         }
         builder.append("Published By " + publisher + " on " + publishedDate + "\n");

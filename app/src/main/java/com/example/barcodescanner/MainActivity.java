@@ -80,20 +80,6 @@ public class MainActivity extends AppCompatActivity implements ViewContract.View
         }
     }
 
-    /*
-    @Override
-    public void onBackPressed() {
-        if (cameraSource == null) {
-            try {
-                if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                    cameraSource.start(surfaceView.getHolder());
-                }
-            } catch (Exception E) {
-                handleFailure("Restarting Camera!");
-            }
-        }
-    }
-     */
 
     @Override
     public void handleSuccess(Results results) {
@@ -150,50 +136,6 @@ public class MainActivity extends AppCompatActivity implements ViewContract.View
                 cameraSource.stop();
             }
         });
-
-         /*
-        barcodeDetector.setProcessor(new Detector.Processor<Barcode>()  {
-            @Override
-            public void release() {
-                cameraSource.stop();
-            }
-
-            @Override
-            public void receiveDetections(@NonNull Detector.Detections<Barcode> detections) {
-                final SparseArray<Barcode> bcs = detections.getDetectedItems();
-                if (bcs.size() != 0) {
-                    Barcode bc = bcs.valueAt(0);
-                    String bcVal = bc.rawValue;
-                    barcodeText.setText(bcVal);
-                    presenter.search(bcVal);
-                    bookText.post(new Runnable() {
-                        private boolean validateISBN(String ISBN) {
-                            int sum = 0;
-                            if (ISBN.length() != 13)
-                                return false;
-                            for (int i = 0; i < ISBN.length(); i++) {
-                                sum = sum + ISBN.charAt(i) * ((i %2 == 0)? 1:3);
-                            }
-                            return (sum%10 == 0);
-                        }
-
-                        @Override
-                        public void run() {
-                            if (!validateISBN(bcVal)) {
-                                bookText.setText("Not a book!");
-                                //bookText.setText(queryGoogleAPI(bcVal));
-                            }
-                            else {
-                                presenter.search(bcVal);
-                            }
-                        }
-                    });
-
-                };
-            }
-        });
-        */
-        //barcodeDetector.release();
 
     }
 

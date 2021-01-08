@@ -18,7 +18,11 @@ public class BarcodeTracker extends Tracker<Barcode> {
 
     // Constructor takes in the context, assigns one half to this interface
     BarcodeTracker(Context context) {
-        this.newBarcodeInterface = (NewBarcodeInterface) context;
+        if (context instanceof NewBarcodeInterface) {
+            this.newBarcodeInterface = (NewBarcodeInterface) context;
+        } else {
+            throw new RuntimeException("Caller must implement NewBarcodeInterface");
+        }
     }
 
     //TODO: Which function should update the interface?
