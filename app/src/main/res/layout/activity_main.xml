@@ -7,14 +7,14 @@
     tools:context=".MainActivity">
 
 
-    <SurfaceView
+    <com.example.barcodescanner.CameraResizing
         android:id="@+id/surface_view"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_height="250dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        app:layout_constraintTop_toTopOf="parent">
+    </com.example.barcodescanner.CameraResizing>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:text="@string/barcode"
-                android:textSize="25sp"
+                android:textSize="30dp"
                 android:gravity="center"
                 />
 
@@ -43,41 +43,45 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/bookinfo"
-                android:textSize="14sp"
+                android:textSize="18dp"
                 android:layout_marginHorizontal="10dp" />
 
             <ImageView
                 android:id="@+id/book_image"
                 android:layout_width="200dp"
-                android:layout_height="200dp"
+                android:layout_height="250dp"
                 android:layout_gravity="center"
                 android:contentDescription="@string/book_image"
                 android:src="@drawable/ic_launcher_foreground"
                 android:layout_marginTop="10dp"
                 />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginVertical="10dp"
-                android:layout_gravity="center">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1">
 
-                <Button
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:id="@+id/have_button"
-                    android:text="@string/have"
-                    android:backgroundTint="@color/green" />
-                <Button
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:id="@+id/want_button"
-                    android:text="@string/want"
-                    android:backgroundTint="@color/pink"/>
-            </LinearLayout>
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:id="@+id/want_button"
+                        android:text="@string/want"
+                        android:backgroundTint="@color/pink"
+                        android:layout_gravity="bottom"/>
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:id="@+id/have_button"
+                        android:text="@string/have"
+                        android:backgroundTint="@color/green"
+                        android:layout_gravity="bottom"/>
+                </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 

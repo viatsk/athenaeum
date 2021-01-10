@@ -7,4 +7,8 @@
     <string name="right_arrow">&gt;</string>
     <string name="have">Have</string>
     <string name="want">Want</string>
+    <string name="db_success">Saved this book to db!</string>
+    <string name="db_failure">Failed to save book!</string>
+    <string name="barcode_error">This is not a valid ISBN</string>
+    <string name="barcode_failure">Check WiFi/Data Connection</string>
 </resources>

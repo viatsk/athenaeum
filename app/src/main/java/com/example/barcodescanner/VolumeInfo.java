@@ -34,15 +34,23 @@ public class VolumeInfo implements Serializable{
     }
     public ImageLinks getImageLinks() {return imageLinks; }
     public String getPrintType() { return printType; }
+    public String getPublisher() {return publisher; }
+    public String getPublishedDate() { return publishedDate; }
 
     @Override
     public String toString(){
         StringBuilder builder = new StringBuilder();
-        builder.append("Title: " + title + " - " + subtitle + "\n");
+        builder.append("Title: " + title);
+        if (subtitle != null) {
+            builder.append(" - " + subtitle);
+        }
+        builder.append("\n");
         for (String author : getAuthors()) {
             builder.append("Author: " + author.toString() + "\n");
         }
-        builder.append("Published By " + publisher + " on " + publishedDate + "\n");
+        if (publisher != null) {
+            builder.append("Published By " + getPublisher() + " on " + publishedDate + "\n");
+        }
         return new String(builder);
     }
 }

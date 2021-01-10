@@ -8,33 +8,33 @@ import androidx.core.app.ActivityCompat;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.vision.CameraSource;
-import com.google.android.gms.vision.Detector;
-import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.MultiProcessor;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity implements ViewContract.View, BarcodeTracker.NewBarcodeInterface {
-    private BarcodeDetector barcodeDetector;
 
     private CameraSource cameraSource;
     private static final int REQUEST_CAMERA_PERMISSION = 201;
 
     private TextView barcodeText;
     private TextView bookText;
-    private SurfaceView surfaceView;
+    private CameraResizing customView;
     private ImageView bookImage;
 
     private ViewContract.Presenter presenter;
@@ -43,17 +43,20 @@ public class MainActivity extends AppCompatActivity implements ViewContract.View
 
     public int resCounter = 0;
 
+    public FirebaseFirestore db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         presenter = new QueryGoogleBooks(this);
-        surfaceView = findViewById(R.id.surface_view); // Bind surface view
+        customView = findViewById(R.id.surface_view); // Bind surface view
         barcodeText = findViewById(R.id.barcode_text); // Bind barcode text
         bookText = findViewById(R.id.bookinfo_text); // Bind book text
         bookImage = findViewById(R.id.book_image); // Bind image view
         haveButton = findViewById(R.id.have_button); // Bind have button
         wantButton = findViewById(R.id.want_button); // Bind want button
+        db = FirebaseFirestore.getInstance();
         initCamera();
     }
 
@@ -73,13 +76,21 @@ public class MainActivity extends AppCompatActivity implements ViewContract.View
         String bcVal = barcode.rawValue;
         barcodeText.setText(bcVal);
         if (!validateISBN(bcVal)) {
-            bookText.setText("This is not a valid ISBN");
+            bookText.setText(R.string.barcode_error);
         }
         else {
             presenter.search(bcVal);
         }
     }
 
+    public void registerButtons(Book book) {
+        Map<String, Object> bk = new HashMap<>();
+        bk.put("title", book.getVolumeInfo().getTitle());
+        bk.put("authors", book.getVolumeInfo().getAuthors());
+        haveButton.setOnClickListener(new ButtonActivity(Boolean.TRUE, bk, db));
+        wantButton.setOnClickListener(new ButtonActivity(Boolean.FALSE, bk, db));
+
+    }
 
     @Override
     public void handleSuccess(Results results) {
@@ -90,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements ViewContract.View
                     .load(results.getItemByIndex(resCounter).getVolumeInfo().getImageLinks().getThumbnail().replace("http:", "https:"))
                     .fit().centerInside()
                     .into(bookImage);
+            registerButtons(results.getItemByIndex(resCounter));
         } else {
             handleFailure("Error - results size was 0!");
         }
@@ -98,13 +110,19 @@ public class MainActivity extends AppCompatActivity implements ViewContract.View
     @Override
     public void handleFailure(String message) {
         // Generic reuse of bookText variable; just print the error to the user :/
-        bookText.setText(message);
+        if (message.contains("java.net.UnknownHostException")) {
+            // bad practice here lol
+            bookText.setText(R.string.barcode_failure);
+        } else {
+            bookText.setText(message);
+        }
     }
 
 
 
     protected void initCamera() {
-        barcodeDetector = new BarcodeDetector.Builder(this).setBarcodeFormats(Barcode.ALL_FORMATS).build();
+        /*
+        BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(this).setBarcodeFormats(Barcode.ALL_FORMATS).build();
         BarcodeTrackerFactory barcodeFactory = new BarcodeTrackerFactory(this); // pass in the context
         barcodeDetector.setProcessor(new MultiProcessor.Builder<>(barcodeFactory).build());
         cameraSource = new CameraSource.Builder(this, barcodeDetector)
@@ -128,15 +146,16 @@ public class MainActivity extends AppCompatActivity implements ViewContract.View
 
             @Override
             public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height) {
-                // Surface won't change; won't do this
+                // TODO: Handle rotations
             }
 
             @Override
             public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
                 cameraSource.stop();
             }
-        });
 
+        });
+         */
     }
 
 

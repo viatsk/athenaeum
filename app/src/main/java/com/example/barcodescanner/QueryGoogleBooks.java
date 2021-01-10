@@ -29,7 +29,7 @@ public class QueryGoogleBooks implements ViewContract.Presenter {
 
             @Override
             public void onFailure(Call<Results> call, Throwable t) {
-                view.handleFailure("There was an error in the search");
+                view.handleFailure(t.toString());
             }
         });
     }
