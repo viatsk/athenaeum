@@ -57,7 +57,6 @@ public class MainActivity extends AppCompatActivity implements ViewContract.View
         haveButton = findViewById(R.id.have_button); // Bind have button
         wantButton = findViewById(R.id.want_button); // Bind want button
         db = FirebaseFirestore.getInstance();
-        initCamera();
     }
 
     private boolean validateISBN(String ISBN) {
@@ -116,46 +115,6 @@ public class MainActivity extends AppCompatActivity implements ViewContract.View
         } else {
             bookText.setText(message);
         }
-    }
-
-
-
-    protected void initCamera() {
-        /*
-        BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(this).setBarcodeFormats(Barcode.ALL_FORMATS).build();
-        BarcodeTrackerFactory barcodeFactory = new BarcodeTrackerFactory(this); // pass in the context
-        barcodeDetector.setProcessor(new MultiProcessor.Builder<>(barcodeFactory).build());
-        cameraSource = new CameraSource.Builder(this, barcodeDetector)
-                .setAutoFocusEnabled(true)
-                .build();
-
-        surfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
-            @Override
-            public void surfaceCreated(@NonNull SurfaceHolder holder) {
-                try {
-                    if(ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED){
-                        cameraSource.start(surfaceView.getHolder());
-                    } else {
-                        ActivityCompat.requestPermissions(MainActivity.this, new
-                                String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height) {
-                // TODO: Handle rotations
-            }
-
-            @Override
-            public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
-                cameraSource.stop();
-            }
-
-        });
-         */
     }
 
 
